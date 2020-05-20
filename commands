@@ -1,0 +1,95 @@
+// main URL's
+https://ardupilot.org/dev/docs/raspberry-pi-via-mavlink.html
+https://www.researchgate.net/publication/323683430_Communicating_with_Raspberry_Pi_via_MAVLink
+
+1
+
+sudo reboot
+sudo nano /etc/network/interfaces
+sudo ifconfig
+sudo -s
+mavproxy.py --master=/dev/ttyAMA0 --baudrate 57600 --out 192.168.137.1:14550 --aircraft MyCopter
+sudo apt-get install gstreamer1.0
+sudo apt-get update
+sudo raspi-config
+sudo pip3 install mavproxy
+sudo apt-get install python3-wxgtk3.0 libxml2-dev python3-pip python3-matplotlib python3-lxml
+sudo apt-get install gedit
+sudo apt-get install nano
+sudo apt-get install screen
+ls /dev/tty*
+sudo chown -R pi /home/pi 
+
+// edit rc.local file
+cd /etc/
+sudo gedit rc.local
+// inside
+(  
+
+   date 
+   echo $PATH
+   PATH=$PATH:/bin:/sbin:/usr/bin:/usr/local/bin 
+   export PATH 
+   cd /home/pi 
+   screen -L -d -m -S MAVProxy -s /bin/bash  mavproxy.py --master=/dev/ttyS0 --baudrate 57600 --out 192.168.0.1:14550 --aircraft MyCopter
+) 
+#> /tmp/rc.log 2>&1 
+
+// to open the running mavproxy screen
+sudo -s
+screen -x
+// get the screen process number if there are some process running and:
+screen -x NUMBER(of process)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// for the gstreamer
+
+https://www.raspberrypi.org/documentation/raspbian/applications/camera.md
+
+raspivid -t 0 -h 720 -w 1080 -fps 25 -hf -b 2000000 -o - | gst-launch-1.0 -v fdsrc ! h264parse !  rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=YOUR_RPI_IP_ADDRESS port=5000
+
+
+sudo apt-get install -y gstreamer1.0-tools
+
+// streeming the camera to a local window
+gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink
+
+
+////////////////////////////////// rpi side ////////////////////////////////////////////////
+//gst-launch-1.0 -vv -e v4l2src device=/dev/video0  ! "video/x-raw,width=640,height=480" ! queue ! omxh264enc  ! h264parse ! rtph264pay ! udpsink host=192.168.0.11 port=5000
+//gst-launch-1.0 -v v4l2src device=/dev/video0  ! "video/x-raw,width=640,height=480",framerate=30/1 ! omxh264enc ! rtph264pay  config-interval=1 pt=96 ! udpsink host=192.168.0.11 port=5000
+//gst-launch-1.0 -v v4l2src device=/dev/video0  ! "video/x-raw,width=640,height=480",framerate=90/1 ! omxh264enc ! rtph264pay  config-interval=1 pt=96 ! udpsink host=192.168.0.11 port=5000
+//gst-launch-1.0 -e -v v4l2src device=/dev/video0  do-timestamp=true !  videorate ! video/x-raw,width=640,height=480,framerate=5/1  ! omxh264enc target-bitrate=1000000 control-rate=variable ! video/x-h264,profile=high ! h264parse ! rtph264pay config-interval=1 ! udpsink host=192.168.0.11 port=5000
+//gst-launch-1.0 -e -v v4l2src device=/dev/video0  do-timestamp=true !  videoconvert ! video/x-raw,width=640,height=480,framerate=15/1  ! omxh264enc target-bitrate=1000000 control-rate=variable ! video/x-h264,profile=high ! h264parse ! rtph264pay config-interval=1 ! udpsink host=192.168.0.11 port=5000
+
+gst-launch-1.0 -e -v v4l2src device=/dev/video0  do-timestamp=true !  videorate ! video/x-raw,width=640,height=480,framerate=30/1  ! omxh264enc target-bitrate=1000000 control-rate=variable ! video/x-h264,profile=high ! h264parse ! rtph264pay config-interval=1 ! udpsink host=192.168.0.11 port=5000
+
+
+//last working OK
+gst-launch-1.0 -v -e v4l2src device=/dev/video0  ! videoscale ! videoconvert ! x264enc tune=zerolatency bitrate=500 speed-preset=superfast  ! rtph264pay ! udpsink host=192.168.0.11 port=5000
+gst-launch-1.0 -v -e v4l2src device=/dev/video0  ! "video/x-raw,width=640,height=480,framerate=(fraction)30/1" ! videoconvert ! x264enc tune=zerolatency bitrate=5000 speed-preset=superfast  ! rtph264pay ! udpsink host=192.168.0.11 port=5000
+
+
+////////////////////////////////// computer side //////////////////////////////////////////////
+gst-launch-1.0 -vv -e udpsrc port=5000 ! application/x-rtp, payload=96 ! rtph264depay ! queue ! avdec_h264 ! videoconvert ! autovideosink sync=false
+
+//last working OK
+gst-launch-1.0 -e -v udpsrc port=5000 ! application/x-rtp, payload=96 ! rtpjitterbuffer ! rtph264depay ! decodebin ! videoconvert ! autovideosink sync=false
+
+
+
+// tests
+gst-launch-1.0 -v -e v4l2src device=/dev/video0  ! "video/x-h264,width=640,height=480" ! h264parse ! queue ! rtph264pay config-interval=1 pt=96 ! gdppay ! udpsink host=192.168.0.11 port=5000
+
