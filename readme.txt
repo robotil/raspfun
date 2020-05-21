@@ -56,3 +56,18 @@ server also:
 	gst-launch-1.0 -v -e v4l2src device=/dev/video0  ! videoscale ! videoconvert ! x264enc tune=zerolatency bitrate=500 speed-preset=superfast  ! rtph264pay ! udpsink host=192.168.0.11 port=5000
 
 
+In order to know which raspberry you are using:
+cat /sys/firmware/devicetree/base/model;echo
+grep Model /proc/cpuinfo
+
+check gpu memory behavior
+sudo /opt/vc/bin/vcdbg reloc stats
+
+OS details
+cat /etc/os-release 
+
+Backup:
+sudo cat /etc/fstab
+sudo dd if=/dev/mmcblk0p2 of=/home/pi/networkdrive/my.img bs=1M
+https://raspberrytips.com/backup-raspberry-pi/#Create_an_image_of_the_SD_card
+rsync -avz -e ssh pi@172.23.40.54:/boot boot
