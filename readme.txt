@@ -71,3 +71,7 @@ sudo cat /etc/fstab
 sudo dd if=/dev/mmcblk0p2 of=/home/pi/networkdrive/my.img bs=1M
 https://raspberrytips.com/backup-raspberry-pi/#Create_an_image_of_the_SD_card
 rsync -avz -e ssh pi@172.23.40.54:/boot boot
+
+gstreamer 
+https://gist.github.com/neilyoung/8216c6cf0c7b69e25a152fde1c022a5d
+gst-launch-1.0 -v rtspsrc location=rtsp://172.23.40.54:8554/test latency=0 buffer-mode=auto ! decodebin ! videoconvert ! autovideosink sync=false
