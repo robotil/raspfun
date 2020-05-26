@@ -91,3 +91,28 @@ or: GST_DEBUG=2,v4l2*=7 ./test-launch "v4l2src device=/dev/video0 num-buffers=90
 or: GST_DEBUG=2,v4l2*=7 ./test-launch "v4l2src device=/dev/video0 num-buffers=9000 ! video/x-raw,width=(int)640,height=(int)480,format=UYVY, interlace-mode=interleaved ! videoconvert ! video/x-raw,width=(int)1920,height=(int)1080,framerate=30/1 ! x264enc ! h264parse ! rtph264pay name=pay0"
 
 /test-launch --gst-debug=3 "(v4l2src device=/dev/video0  ! \"video/x-raw,width=640,height=480,framerate=(fraction)30/1\" ! videoconvert ! x264enc tune=zerolatency bitrate=5000 speed-preset=superfast  ! rtph264pay name=pay0)"
+
+
+
+
+
+
+
+
+
+client
+
+***************** MIPI TCP:
+streamer:
+	raspivid -t 0 -w 640 -h 480 -fps 48 -b 2000000 -awb tungsten  -o - | gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=0.0.0.0 port=5000
+client:
+	gst-launch-1.0 -v tcpclientsrc host=172.23.40.54 port=5000 ! gdpdepay ! rtph264depay ! avdec_h264 ! videoconvert  ! autovideosink sync=false
+
+****************** RTSP
+streamer:
+	/test-launch --gst-debug=3 "( rpicamsrc bitrate=8000000 awb-mode=tungsten preview=false ! video/x-h264, width=640, height=480, framerate=30/1 ! h264parse ! rtph264pay name=pay0 pt=96 )"
+client:
+	gst-launch-1.0 -v rtspsrc location=rtsp://172.23.40.54:8554/test latency=0 buffer-mode=auto ! decodebin ! videoconvert ! autovideosink sync=false
+
+
+
