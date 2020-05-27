@@ -1,0 +1,2 @@
+https://raspberrytips.com/backup-raspberry-pi/#Create_an_image_of_the_SD_card
+rsync -avz -e ssh pi@172.23.40.54:/boot boot

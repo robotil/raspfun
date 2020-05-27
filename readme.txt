@@ -41,10 +41,10 @@ sudo aptitude install gstreamer1.0-tools
 
 sudo apt install screen
 
-g
 gst-inspect x264enc
 
 sudo apt install gstreamer1.0-plugins-ugly
+sanity: gst-launch-1.0 v4l2src device=/dev/video1 ! videoconvert ! ximagesink
 
 server:
 	gst-launch-1.0 -v -e v4l2src device=/dev/video0  ! "video/x-raw,width=640,height=480,framerate=(fraction)30/1" ! videoconvert ! x264enc tune=zerolatency bitrate=5000 speed-preset=superfast  ! rtph264pay ! udpsink host=172.23.40.132 port=5000
@@ -65,11 +65,24 @@ sudo /opt/vc/bin/vcdbg reloc stats
 OS details
 cat /etc/os-release 
 
+For Geany debug plugin:
+git clone https://github.com/geany/geany-plugins
+sudo apt install vim
+sudo apt install intltool
+sudo apt-get install libgtk-3-dev
+./autogen.sh
+make
+sudo make install 
+
 Backup:
 sudo cat /etc/fstab
 sudo dd if=/dev/mmcblk0p2 of=/home/pi/networkdrive/my.img bs=1M
-https://raspberrytips.com/backup-raspberry-pi/#Create_an_image_of_the_SD_card
+Reference: https://raspberrytips.com/backup-raspberry-pi/#Create_an_image_of_the_SD_card
 rsync -avz -e ssh pi@172.23.40.54:/boot boot
+Actually:
+	save: sudo dd bs=4M if=dev/sdb | gzip > rasp`date +%d%m%y`.gz
+	restore: sudo gzip -dc /home/robil/<image.gz> | dd bs=4M of=/dev/sdb
+		
 
 gstreamer: 
 https://gist.github.com/neilyoung/8216c6cf0c7b69e25a152fde1c022a5d
@@ -110,9 +123,24 @@ client:
 
 ****************** RTSP
 streamer:
-	/test-launch --gst-debug=3 "( rpicamsrc bitrate=8000000 awb-mode=tungsten preview=false ! video/x-h264, width=640, height=480, framerate=30/1 ! h264parse ! rtph264pay name=pay0 pt=96 )"
+	./leg-test-launch --gst-debug=3 "( rpicamsrc bitrate=8000000 awb-mode=tungsten preview=false ! video/x-h264, width=640, height=480, framerate=30/1 ! h264parse ! rtph264pay name=pay0 pt=96 )"
 client:
 	gst-launch-1.0 -v rtspsrc location=rtsp://172.23.40.54:8554/test latency=0 buffer-mode=auto ! decodebin ! videoconvert ! autovideosink sync=false
+
+*****************************************************************************************************************
+
+Debugging RTSP server:
+Compile one test:
+gcc -g -o test-launch  test-launch.c  `pkg-config --cflags --libs gstreamer-rtsp-server-1.0`
+BTW:
+pkg-config --cflags --libs gstreamer-rtsp-server-1.0 = 
+-pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 
+-I/usr/lib/arm-linux-gnueabihf/glib-2.0/include -L/usr/local/lib -lgstrtspserver-1.0 -lgstbase-1.0 
+-lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+
+
+Visual Code:
+Reference: https://pimylifeup.com/raspberry-pi-visual-studio-code/
 
 
 
