@@ -28,3 +28,18 @@ gst-launch-1.0 filesrc location=gst-v4l2-265.mp4 ! qtdemux ! queue ! h265parse !
 https://www.jetsonhacks.com/2017/03/25/nvpmodel-nvidia-jetson-tx2-development-kit/
 sudo nvpmodel -m 1
 sudo nvpmodel -q –verbose
+
+Nothing displayed in case of 5W: 
+(Stream+client on same nano)
+gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM), format=NV12, width=1920, height=1080' ! nvv4l2h264enc insert-sps-pps=true ! h264parse ! rtph264pay pt=96 ! udpsink host=127.0.0.1 port=8001 sync=false -e
+gst-launch-1.0 udpsrc address=127.0.0.1 port=8001 caps='application/x-rtp, encoding-name=(string)H264, payload=(int)96' ! rtph264depay ! queue ! h264parse ! nvv4l2decoder ! nv3dsink -e
+
+RTP:
+Nano:
+gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM), format=NV12, width=1920, height=1080' ! nvv4l2h264enc insert-sps-pps=true ! h264parse ! rtph264pay pt=96 ! udpsink host=172.23.40.14 port=5000 sync=false -e
+
+Client:
+gst-launch-1.0 -v udpsrc uri=udp://172.23.40.14:5000 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000,encoding-name=(string)H264,packetization-mode=(string)1,profile-level-id=(string)640028,payload=(int)96, a-framerate=(string)25" ! rtph264depay ! h264parse ! decodebin ! fpsdisplaysink video-sink=xvimagesink
+
+
+
