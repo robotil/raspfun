@@ -70,15 +70,15 @@ def main():
             else:
                 stdscr.addstr(4, 0, "CPU 2: " + cpu_txt[1] + "   ", curses.color_pair(2))
 
-            if cpu_val[2] > 70:
-                stdscr.addstr(5, 0, "CPU 3: " + cpu_txt[2] + "", curses.color_pair(1))
-            else:
-                stdscr.addstr(5, 0, "CPU 3: " + cpu_txt[2] + "   ", curses.color_pair(2))
+            #if cpu_val[2] > 70:
+            #    stdscr.addstr(5, 0, "CPU 3: " + cpu_txt[2] + "", curses.color_pair(1))
+            #else:
+            #    stdscr.addstr(5, 0, "CPU 3: " + cpu_txt[2] + "   ", curses.color_pair(2))
 
-            if cpu_val[3] > 70:
-                stdscr.addstr(6, 0, "CPU 4: " + cpu_txt[3] + "", curses.color_pair(1))
-            else:
-                stdscr.addstr(6, 0, "CPU 4: " + cpu_txt[3] + "   ", curses.color_pair(2))
+            #if cpu_val[3] > 70:
+            #    stdscr.addstr(6, 0, "CPU 4: " + cpu_txt[3] + "", curses.color_pair(1))
+            #else:
+            #    stdscr.addstr(6, 0, "CPU 4: " + cpu_txt[3] + "   ", curses.color_pair(2))
 
             if float((str(last).split("GR3D_FREQ "))[1].split("%")[0]) > 70:
                 stdscr.addstr(7, 0, gpu, curses.color_pair(1))
