@@ -1,2 +1,11 @@
 run raspberry camera:
 gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM),width=3280, height=2464, framerate=21/1, format=NV12' ! nvvidconv flip-method=0 ! 'video/x-raw,width=480, height=320' ! nvvidconv ! nvegltransform ! nveglglessink -e
+
+jetpack version:
+sudo apt-cache show nvidia-jetpack
+or: cat /usr/include/cudnn_version.h | grep -i CUDNN_MAJOR -A 2
+
+tegra version:
+head -n 1 /etc/nv_tegra_release
+
+https://forums.developer.nvidia.com/t/deep-learning-inference-benchmarking-instructions/73291
