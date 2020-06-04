@@ -9,3 +9,9 @@ tegra version:
 head -n 1 /etc/nv_tegra_release
 
 https://forums.developer.nvidia.com/t/deep-learning-inference-benchmarking-instructions/73291
+
+Power Supply: 5W
+sudo nvpmodel -m 1
+https://github.com/dusty-nv/jetson-inference/issues/334
+
+https://maker.pro/nvidia-jetson/tutorial/streaming-real-time-video-from-rpi-camera-to-browser-on-jetson-nano-with-flask
