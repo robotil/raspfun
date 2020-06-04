@@ -15,3 +15,16 @@ sudo nvpmodel -m 1
 https://github.com/dusty-nv/jetson-inference/issues/334
 
 https://maker.pro/nvidia-jetson/tutorial/streaming-real-time-video-from-rpi-camera-to-browser-on-jetson-nano-with-flask
+
+
+nvgstcapture-1.0 -A -C 5 --capture-auto --video-res=3 --capture-time=60 --mode=2 --capture-gap=2000 --quit-after=10
+nvgstplayer-1.0 -i nvcamtest_29473_s00_00000.mp4 
+gst-launch-1.0 filesrc location=nvcamtest_29473_s00_00000.mp4 ! qtdemux name=demux demux.video_0 ! queue ! h264parse ! omxh264dec ! nveglglessink -e
+gst-launch-1.0 nvarguscamerasrc !   'video/x-raw(memory:NVMM), width=(int)1920, height=(int)1080, \
+  format=(string)NV12, framerate=(fraction)30/1' ! nvv4l2h265enc   bitrate=8000000 !\ h265parse ! qtmux ! filesink location=gst-v4l2-265.mp4 -e
+gst-launch-1.0 filesrc location=gst-v4l2-265.mp4 ! qtdemux ! queue ! h265parse ! nvv4l2decoder ! nv3dsink -e
+
+
+https://www.jetsonhacks.com/2017/03/25/nvpmodel-nvidia-jetson-tx2-development-kit/
+sudo nvpmodel -m 1
+sudo nvpmodel -q –verbose
