@@ -41,5 +41,13 @@ gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM), format=NV12, width=
 Client:
 gst-launch-1.0 -v udpsrc uri=udp://172.23.40.14:5000 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000,encoding-name=(string)H264,packetization-mode=(string)1,profile-level-id=(string)640028,payload=(int)96, a-framerate=(string)25" ! rtph264depay ! h264parse ! decodebin ! fpsdisplaysink video-sink=xvimagesink
 
+RTSP:
+Server:
+	./test-launch "( nvarguscamerasrc ! video/x-raw(memory:NVMM), width=(int)720, height=(int)576, format=(string)NV12, framerate=(fraction)30/1 ! nvv4l2h264enc bitrate=8000000 ! h264parse !   rtph264pay name=pay0 pt=96 )"
 
+Client: gst-launch-1.0 rtspsrc location=rtsp://172.23.40.62:8554/test ! decodebin ! xvimagesink
+	
+
+RESET CAMERA:
+sudo systemctl restart nvargus-daemon
 
