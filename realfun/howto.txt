@@ -1,0 +1,8 @@
+gcc basic-tutorial-3.c -o basic-tutorial-3 `pkg-config --cflags --libs gstreamer-1.0`
+gcc -g -o test-launch  test-launch.c  `pkg-config --cflags --libs gstreamer-rtsp-server-1.0`
+
+pkg-config --cflags --libs gstreamer-rtsp-server-1.0 = 
+-pthread -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/aarch64-linux-gnu/glib-2.0/include -lgstrtspserver-1.0 -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+
+pkg-config --cflags --libs gstreamer-1.0 =
+-pthread -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/aarch64-linux-gnu/glib-2.0/include -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
