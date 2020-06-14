@@ -51,3 +51,6 @@ Client: gst-launch-1.0 rtspsrc location=rtsp://172.23.40.62:8554/test ! decodebi
 RESET CAMERA:
 sudo systemctl restart nvargus-daemon
 
+
+ffprobe -h
+
