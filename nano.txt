@@ -54,3 +54,5 @@ sudo systemctl restart nvargus-daemon
 
 ffprobe -h
 
+http://lifestyletransfer.com/how-to-launch-gstreamer-pipeline-in-python/
+
