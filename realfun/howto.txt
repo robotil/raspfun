@@ -9,3 +9,6 @@ pkg-config --cflags --libs gstreamer-1.0 =
 
 link with specific audio libraries:
 gcc basic-8.c -o basic-8 `pkg-config --cflags --libs gstreamer-1.0 gstreamer-audio-1.0`
+
+link with utilities libraries
+gcc basic-tutorial-9.c -o basic-tutorial-9 `pkg-config --cflags --libs gstreamer-1.0 gstreamer-pbutils-1.0`
