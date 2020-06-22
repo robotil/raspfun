@@ -165,7 +165,7 @@ int main (int argc, char **argv) {
   CustomData data;
   GError *err = NULL;
   //gchar *uri = "https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm";
-  gchar *uri = "rtsp://127.0.0.1:8554/test";
+  gchar *uri = "rtsp://172.23.40.66:8554/test";
   /* if a URI was provided, use it instead of the default one */
   if (argc > 1) {
     uri = argv[1];
