@@ -122,7 +122,7 @@ static void on_discovered_cb (GstDiscoverer *discoverer, GstDiscovererInfo *info
   }
 
   if (result != GST_DISCOVERER_OK) {
-    g_printerr ("This URI cannot be played\n");
+    g_printerr ("This URI <%s> cannot be played\n", uri);
     return;
   }
 
