@@ -1,5 +1,7 @@
 run raspberry camera:
 gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM),width=3280, height=2464, framerate=21/1, format=NV12' ! nvvidconv flip-method=0 ! 'video/x-raw,width=480, height=320' ! nvvidconv ! nvegltransform ! nveglglessink -e
+usb camera:
+gst-launch-1.0 v4l2src device=/dev/video1 ! videoconvert ! ximagesink
 
 jetpack version:
 sudo apt-cache show nvidia-jetpack
@@ -51,6 +53,10 @@ Client: gst-launch-1.0 rtspsrc location=rtsp://172.23.40.62:8554/test ! decodebi
 RESET CAMERA:
 sudo systemctl restart nvargus-daemon
 
+RTSP Stream USB Camera:
+./test-launch "v4l2src device="/dev/video1" ! video/x-raw ! videoconvert ! omxh264enc ! rtph264pay name=pay0 pt=96"
+stream ready at rtsp://127.0.0.1:8554/test
+(WORKS)
 
 ffprobe -h
 
