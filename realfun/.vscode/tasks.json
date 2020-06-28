@@ -1,0 +1,47 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "SimpleBuild",
+            "type": "shell",
+            "command": "gcc -g ${fileBasename} -o ${fileBasenameNoExtension} `pkg-config --cflags --libs gstreamer-1.0`",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "BuildAudio",
+            "type": "shell",
+            "command": "gcc -g ${fileBasename} -o ${fileBasenameNoExtension} `pkg-config --cflags --libs gstreamer-1.0 gstreamer-audio-1.0`",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "UtilBuild",
+            "type": "shell",
+            "command": "gcc -g ${fileBasename} -o ${fileBasenameNoExtension} `pkg-config --cflags --libs gstreamer-1.0 gstreamer-pbutils-1.0`",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "RTSPBuild",
+            "type": "shell",
+            "command": "gcc -g ${fileBasename} -o ${fileBasenameNoExtension} `pkg-config --cflags --libs gstreamer-1.0 gstreamer-rtsp-server-1.0`",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
