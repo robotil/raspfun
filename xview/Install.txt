@@ -21,3 +21,28 @@ sudo apt install curl gnupg2 lsb-release
 sudo apt install python3-argcomplete
 sudo apt install  -y python-pip python3-pip pylint3 pylint
 sudo apt install  -y v4l2loopback-dkms ffmpeg
+## Install ROS1 melodic http://wiki.ros.org/melodic/Installation/Ubuntu
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+sudo apt update
+sudo apt install ros-melodic-desktop-full
+source /opt/ros/melodic/setup.bash
+sudo apt install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+sudo rosdep init
+rosdep update
+####
+sudo apt install ros-melodic-move-base ros-melodic-move-base-msgs 
+sudo apt install ros-melodic-driver-base ros-melodic-ackermann-msgs 
+sudo apt install ros-melodic-tf2 ros-melodic-tf2-web-republisher
+sudo apt install ros-melodic-rosbridge-server
+sudo apt install -y ros-melodic-joy
+sudo apt install python3-catkin-pkg-modules python3-rospkg-modules python3-empy
+sudo apt-get install python-catkin-tools
+sudo apt install libpcap0.8-dev
+sudo apt install ros-melodic-qt-ros
+sudo apt install ros-melodic-octomap-msgs
+sudo apt-get install libx264-dev
+sudo apt install gstreamer1.0-libav
+sudo apt install putty putty-tools
+sudo apt install nano
+
