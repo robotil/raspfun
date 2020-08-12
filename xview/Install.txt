@@ -1,0 +1,23 @@
+sudo apt install -y terminator
+sudo apt install v4l-utils
+sudo apt install -y git-all
+mkdir git
+cd git
+git clone https://github.com/robotil/raspfun.git
+git clone https://github.com/mhallak/proof-of-concept-video-manager.git
+cd ../
+git clone https://github.com/mhallak/scripts.git
+sudo apt install fortune
+sudo apt install aptitude synaptic
+sudo apt install screen
+sudo apt install -y mplayer mencoder mpv vlc meld
+sudo apt install -y default-jre default-jdk
+sudo apt-get install -y libgstrtspserver-1.0 libgstreamer1.0-dev
+sudo add-apt-repository universe
+sudo add-apt-repository multiverse
+sudo apt install -y tree
+sudo apt install -y lbzip2 htop slurm tcptrack
+sudo apt install curl gnupg2 lsb-release
+sudo apt install python3-argcomplete
+sudo apt install  -y python-pip python3-pip pylint3 pylint
+sudo apt install  -y v4l2loopback-dkms ffmpeg
