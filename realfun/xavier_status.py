@@ -47,7 +47,7 @@ def main():
             curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE) #red
             curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK) #green
             curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE) #title
-            stdscr.addstr(0,0, "   NVIDIA JETSON TX2 STATS   ", curses.color_pair(3))
+            stdscr.addstr(0,0, "   NVIDIA XAVIER AGX STATS   ", curses.color_pair(3))
 
             if int((str(last).split("RAM "))[1].split("/")[0]) > 3000:
                 stdscr.addstr(1, 0, ram, curses.color_pair(1))
@@ -85,17 +85,17 @@ def main():
             else:
                 stdscr.addstr(7, 0, gpu, curses.color_pair(2))
 
-            if float((str(last).split("CPU@"))[1].split("C PMIC@")[0]) > 50:
+            if float((str(last).split("CPU@"))[1].split("C thermal@")[0]) > 50:
                 stdscr.addstr(8, 0, cpu_temp, curses.color_pair(1))
             else:
                 stdscr.addstr(8, 0, cpu_temp, curses.color_pair(2))
 
-            if float((str(last).split("GPU@"))[1].split("C AO@")[0]) > 50:
+            if float((str(last).split("GPU@"))[1].split("C Tdiode@")[0]) > 50:
                 stdscr.addstr(9, 0, gpu_temp, curses.color_pair(1))
             else:
                 stdscr.addstr(9, 0, gpu_temp, curses.color_pair(2))
 
-            if float((str(last).split("thermal@"))[1].split("C POM_5V")[0]) > 50:
+            if float((str(last).split("thermal@"))[1].split("C Tboard")[0]) > 50:
                 stdscr.addstr(10, 0, thermal, curses.color_pair(1))
             else:
                 stdscr.addstr(10, 0, thermal, curses.color_pair(2))
