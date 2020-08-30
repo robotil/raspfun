@@ -1,0 +1,3 @@
+sudo ./flash.sh -r -k APP jetson-xavier mmcblk0p1
+
+sudo ./flash.sh -r -k APP -G backup.img jetson-xavier mmcblk0p1
