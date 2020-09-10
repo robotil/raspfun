@@ -1,0 +1,2 @@
+gst-launch-1.0 -v rtspsrc location=rtsp://172.23.40.130:8554/test ! rtph264depay ! avdec_h264 ! timeoverlay halignment=right valignment=bottom ! videorate ! video/x-raw,framerate=6000/1001 ! jpegenc ! multifilesink location="/home/robil/Pictures/frame%08d.jpg"
+https://stackoverflow.com/questions/59025321/capture-jpeg-images-from-rtsp-gstreamer
