@@ -24,8 +24,9 @@ typedef struct _CustomData {
   GstElement *sink;
 } CustomData;
 
-/* Handler for the pad-added signal 
-static void pad_added_handler (GstElement *src, GstPad *pad, CustomData *data);*/
+/* Handler for the pad-added signal */
+/*static void pad_added_handler(GstElement *element, GstPad *pad, gpointer data);*/
+static void pad_added_handler (GstElement *src, GstPad *pad, CustomData *data);
 
 int main(int argc, char *argv[]) {
   CustomData data;
@@ -37,9 +38,19 @@ int main(int argc, char *argv[]) {
   GstCaps *video_pad_caps = NULL;
   GstStructure *video_pad_struct = NULL;
   const gchar *video_pad_type = NULL;
+  GError *error = NULL;
+	const gchar *error_message;
+  const char *url;
 
   /* Initialize GStreamer */
   gst_init (&argc, &argv);
+
+  if (argc > 1){
+      url = argv[1];
+  } else {
+      url = "rtsp://172.23.40.133:8554/test";
+  }
+  g_print ("URL is %s \n", url);
 
   /* Create the elements */
   data.source = gst_element_factory_make ("rtspsrc", "source");
@@ -63,29 +74,46 @@ int main(int argc, char *argv[]) {
    * point. We will do it later. */
   gst_bin_add_many (GST_BIN (data.pipeline), data.source, data.rtph264Convert, data.avdecConvert, data.timerOverlayFilter, 
   data.videoRateFilter, data.jpegConvert, data.sink, NULL);
-  if (!gst_element_link_many (data.jpegConvert, data.sink, NULL)) {
-    g_printerr ("Elements could not be linked.\n");
+ 
+ if (!gst_element_link_many (/*data.rtph264Convert, */data.avdecConvert, data.timerOverlayFilter, data.videoRateFilter, NULL)) {
+    g_printerr ("Pipeline body couldn't be linked.\n");
     gst_object_unref (data.pipeline);
     return -1;
   }
- if (!gst_element_link_many (data.rtph264Convert, data.avdecConvert, data.timerOverlayFilter, data.videoRateFilter, NULL)) {
-    g_printerr ("Elements for video could not be linked.\n");
-    gst_object_unref (data.pipeline);
-    return -1;
-  }
+  // if (!gst_element_link (data.source, data.rtph264Convert)) {
+  //   g_printerr ("%s: %s\n", ("Source could not be linked to rtph264Convert ."), error ? error->message : ("No error given"));
+  //   g_clear_error (&error);
+  //   gst_object_unref (data.pipeline);
+  //   return -1;
+  // }
   /* Set the URI to play location=rtsp://172.23.40.130:8554/test*/
-  g_object_set (data.source, "location", "rtsp://172.23.40.130:8554/test", NULL);
+  g_object_set (data.source, "location", url, NULL);
+
+  g_signal_connect(data.source, "pad-added", G_CALLBACK(pad_added_handler), &data);
+ /* g_signal_connect(data.rtph264Convert, "pad-added", G_CALLBACK(pad_added_handler), data.avdecConvert);*/
 
   /* Set cap video video/x-raw,framerate=6000/1001 */
   video_pad_caps = gst_caps_new_simple("video/x-raw", "framerate", GST_TYPE_FRACTION, 6000,1001, NULL);
-  video_pad = gst_element_get_static_pad (data.videoRateFilter, "src");
-  g_object_set (video_pad, "caps", video_pad_caps, NULL);
+  if (gst_element_link_filtered(data.videoRateFilter, data.jpegConvert, video_pad_caps) == FALSE) {
+      g_printerr("Error: gst_element_link_filtered() failed.\n");
+      gst_element_set_state(data.pipeline, GST_STATE_NULL);
+      gst_object_unref(data.pipeline);
+      return -1;
+   }
+  if (!gst_element_link (data.jpegConvert, data.sink)) {
+      g_printerr ("Video to sink couldn't be linked.\n");
+      gst_object_unref (data.pipeline);
+      return -1;
+  }
+  // video_pad = gst_element_get_static_pad (data.videoRateFilter, "src");
+  // g_object_set (video_pad, "caps", video_pad_caps, NULL);
 
   /* Set multifilesink attribute location="./frame%08d.jpg"*/
   g_object_set(data.sink, "location", "./frame%08d.jpg", NULL );
 
   /* Connect to the pad-added signal */
   /*g_signal_connect (data.source, "pad-added", G_CALLBACK (pad_added_handler), &data);*/
+
 
   /* Start playing */
   ret = gst_element_set_state (data.pipeline, GST_STATE_PLAYING);
@@ -94,6 +122,8 @@ int main(int argc, char *argv[]) {
     gst_object_unref (data.pipeline);
     return -1;
   }
+
+  GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS(GST_BIN(data.pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "gstpipeline");
 
   /* Listen to the bus */
   bus = gst_element_get_bus (data.pipeline);
@@ -142,4 +172,19 @@ int main(int argc, char *argv[]) {
   gst_element_set_state (data.pipeline, GST_STATE_NULL);
   gst_object_unref (data.pipeline);
   return 0;
+}
+
+static void pad_added_handler(GstElement *src, GstPad *new_pad, CustomData *data) {
+        g_print ("Received new pad '%s' from '%s':\n", GST_PAD_NAME (new_pad), GST_ELEMENT_NAME (src));
+
+        GstPad *sinkpad;
+        GstElement *downstream = (GstElement *) data->rtph264Convert;
+
+        sinkpad = gst_element_get_static_pad(downstream, "sink");
+
+        gst_pad_link (new_pad, sinkpad);
+        /*GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS(GST_BIN(data->pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "gstpipeline");*/
+
+
+        gst_object_unref(sinkpad);
 }
