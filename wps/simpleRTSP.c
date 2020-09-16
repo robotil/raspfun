@@ -1,7 +1,11 @@
 /*****
  * Ref http://gstreamer-devel.966125.n4.nabble.com/Simple-RTSP-Pipeline-Works-with-gst-launch-But-Not-with-API-td4678108.html
  *  From example: 
- *     gst-launch-1.0 rtspsrc port-range=5000-5100 location=rtsp://172.23.40.136:8554/test latency=0 ! decodebin ! videoconvert ! video/x-raw,width=640,height=480,format=YUY2 ! autovideosink
+ *     gst-launch-1.0 rtspsrc port-range=5000-5100 location=rtsp://172.23.40.136:8554/test latency=0 ! decodebin ! \
+ *                      videoconvert ! video/x-raw,width=640,height=480,format=YUY2 ! autovideosink
+ * The following pipeline works:
+ * gst-launch-1.0 rtspsrc port-range=5000-5100 location=rtsp://172.23.40.136:8554/test latency=0 ! decodebin ! \
+ *                      videoconvert ! video/x-raw,width=640,height=480,format=YUY2 ! jpegenc ! multifilesink location="./frame%08d.jpg"
  * ***/
 #include <gst/gst.h>
 static GMainLoop *loop;
@@ -47,7 +51,7 @@ int main(int argc, char *argv[]) {
         GstElement *source, *dec_bin, *v_conv, *sink;
         source = gst_element_factory_make("rtspsrc", "source");
         dec_bin = gst_element_factory_make("decodebin", "dec_bin");
-        v_conv = gst_element_factory_make("videoconvert", "v_con");
+        v_conv = gst_element_factory_make("videoconvert", "v_conv");
         sink = gst_element_factory_make("autovideosink", "sink");
         gst_bin_add_many(GST_BIN(pipeline), source, dec_bin, v_conv, sink, NULL);
 
