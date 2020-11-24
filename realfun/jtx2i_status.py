@@ -37,10 +37,10 @@ def main():
             cpu_txt = []
             cpu_val = []
             for cpu in cpus:
+            	#print(cpus)
 		if cpu != "off":
-                    cpu_txt.append(cpu.split("@")[0] + " at " + cpu.split("@")[1] + "MHz")
-                    cpu_val.append(float(cpu.split("%")[0]))
-
+			cpu_txt.append(cpu.split("@")[0] + " at " + cpu.split("@")[1] + "MHz")
+			cpu_val.append(float(cpu.split("%")[0]))
 
             stdscr.refresh()
 
@@ -80,37 +80,37 @@ def main():
             else:
                 stdscr.addstr(6, 0, "CPU 4: " + cpu_txt[3] + "   ", curses.color_pair(2))
 
-            # if cpu_val[4] > 70:
-            #     stdscr.addstr(6, 0, "CPU 5: " + cpu_txt[4] + "", curses.color_pair(1))
-            # else:
-            #     stdscr.addstr(6, 0, "CPU 5: " + cpu_txt[4] + "   ", curses.color_pair(2))
+            if cpu_val[4] > 70:
+                stdscr.addstr(7, 0, "CPU 5: " + cpu_txt[4] + "", curses.color_pair(1))
+            else:
+                stdscr.addstr(7, 0, "CPU 5: " + cpu_txt[4] + "   ", curses.color_pair(2))
 
-            # if cpu_val[5] > 70:
-            #     stdscr.addstr(6, 0, "CPU 6: " + cpu_txt[5] + "", curses.color_pair(1))
-            # else:
-            #     stdscr.addstr(6, 0, "CPU 6: " + cpu_txt[5] + "   ", curses.color_pair(2))
+            if cpu_val[5] > 70:
+                stdscr.addstr(8, 0, "CPU 6: " + cpu_txt[5] + "", curses.color_pair(1))
+            else:
+                stdscr.addstr(8, 0, "CPU 6: " + cpu_txt[5] + "   ", curses.color_pair(2))
 
             if float((str(last).split("GR3D_FREQ "))[1].split("%")[0]) > 70:
-                stdscr.addstr(7, 0, gpu, curses.color_pair(1))
+                stdscr.addstr(9, 0, gpu, curses.color_pair(1))
             else:
-                stdscr.addstr(7, 0, gpu, curses.color_pair(2))
+                stdscr.addstr(9, 0, gpu, curses.color_pair(2))
 
             if float((str(last).split("CPU@"))[1].split("C PMIC@")[0]) > 50:
-                stdscr.addstr(8, 0, cpu_temp, curses.color_pair(1))
+                stdscr.addstr(10, 0, cpu_temp, curses.color_pair(1))
             else:
-                stdscr.addstr(8, 0, cpu_temp, curses.color_pair(2))
+                stdscr.addstr(10, 0, cpu_temp, curses.color_pair(2))
 
             if float((str(last).split("GPU@"))[1].split("C BCPU@")[0]) > 50:
-                stdscr.addstr(9, 0, gpu_temp, curses.color_pair(1))
+                stdscr.addstr(11, 0, gpu_temp, curses.color_pair(1))
             else:
-                stdscr.addstr(9, 0, gpu_temp, curses.color_pair(2))
+                stdscr.addstr(11, 0, gpu_temp, curses.color_pair(2))
 
             if float((str(last).split("thermal@"))[1].split("C Tdiode@")[0]) > 50:
-                stdscr.addstr(10, 0, thermal, curses.color_pair(1))
+                stdscr.addstr(12, 0, thermal, curses.color_pair(1))
             else:
-                stdscr.addstr(10, 0, thermal, curses.color_pair(2))
+                stdscr.addstr(12, 0, thermal, curses.color_pair(2))
 
-            stdscr.move(12,0)
+            stdscr.move(14,0)
             stdscr.refresh()
             time.sleep(1.1)
     finally:
