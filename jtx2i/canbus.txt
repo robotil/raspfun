@@ -1,0 +1,17 @@
+Change bitrate
+=========
+sudo ip link set <ifname> down
+sudo ip link set <ifname> type can bitrate <bitrate>
+
+Testing
+=========
+Open one terminal and:
+>>>>> candump any,0:0,#FFFFFFFF
+
+Open another terminal and:
+>>>>> cangen can0
+  on terminal 1, you see the data suffixed with can0
+>>>>> stop
+>>>>> cangen can1
+  on terminal 1, you see the data suffixed with can1
+>>>>> stop
