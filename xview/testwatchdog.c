@@ -20,6 +20,8 @@ int main(int argc, char *argv[])
     int opt;
     char *wtd[120];
     int tmo;
+    struct watchdog_info info;
+
     printf("argc=%d\n", argc);
     for( int i = 0; i < argc; i++ )
 	{
@@ -28,11 +30,12 @@ int main(int argc, char *argv[])
     if (argc >1){
         strcpy(wtd, argv[1]);
         printf("wtd=%s\n", wtd);
-    }
+    } else strcpy(wtd,"/dev/watchdog0");
+
     if (argc > 2){
         tmo=atoi(argv[2]);
         printf("tmo=%d\n", tmo);
-    }
+    } else tmo=120;
     
     /* open WDT0 device (WDT0 enables itself automatically) */
     fd = open(wtd, O_RDWR);
@@ -42,6 +45,16 @@ int main(int argc, char *argv[])
         return -1; 
     }
     
+    if (ioctl(fd, WDIOC_GETSUPPORT, &info)) {
+        perror("ioctl");
+        // abort, but you probably started the timer! See below.
+    }
+
+    if (WDIOF_MAGICCLOSE & info.options) {
+        printf("Watchdog supports magic close char\n");
+        // You have started the timer here! Handle that appropriately.
+    }
+
     /* WDT0 is counting now,check the default timeout value */
     ret = ioctl(fd, WDIOC_GETTIMEOUT, &timeout);
     if(ret) {
@@ -49,12 +62,9 @@ int main(int argc, char *argv[])
         perror("Get watchdog timeout value failed!\n");
         return -1; 
     }
-    // ret = close(fd);
-    // if(ret) {
-    //     perror("Cannot close watchdog\n");
-    // }
+    
     fprintf(stdout, "Watchdog timeout value: %d\n", timeout);
-    return 0;
+
     /* set new timeout value 60s */
     /* Note the value should be within [5, 1000] */
     timeout = tmo;
@@ -73,4 +83,13 @@ int main(int argc, char *argv[])
         //fprintf(stderr, "Kick watchdog failed!\n");
         return -1;
     }
+    while (1) {
+		ret = write(fd, "\0", 1);
+		if (ret != 1) {
+			ret = -1;
+			break;
+		}
+		sleep(10);
+	}
+	close(fd);
 }
