@@ -1,7 +1,7 @@
 #!/usr/bin/env Python3      
 import PySimpleGUI as sg      
 
-sg.ChangeLookAndFeel('GreenTan')      
+sg.ChangeLookAndFeel('GreenTan')     
 
 # ------ Menu Definition ------ #      
 menu_def = [['File', ['Open', 'Save', 'Exit', 'Properties']],      

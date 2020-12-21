@@ -76,6 +76,13 @@ sudo ./install_geographiclib_datasets.sh
 # Code-OSS
 According installVSCode.sh (in raspfun repository: https://github.com/robotil/raspfun.git)
 
+pip install PySimpleGUI
+pip3 install PySimpleGUI
+
+# MAVProxy
+sudo apt-get install python-dev python-opencv python-wxgtk4.0 python-pip python-matplotlib python-lxml python-pygame
+pip install PyYAML mavproxy --user
+sudo apt install libxslt-dev
 
 
 

@@ -1,0 +1,4 @@
+Compile
+=============
+gcc -g -o can_receive_sanity can_receive_sanity.c
+gcc -g -o can_send_sanity can_send_sanity.c
