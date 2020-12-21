@@ -85,6 +85,10 @@ pip install PyYAML mavproxy --user
 sudo apt install libxslt-dev
 
 
+#jetson tools
+jtop
+sudo -H pip install -U jetson-stats
+
 
 
 

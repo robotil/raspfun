@@ -12,7 +12,10 @@
                 "/usr/include/pango-1.0",
                 "/usr/lib/x86_64-linux-gnu/gtk-2.0/include",
                 "/usr/include/gdk-pixbuf-2.0",
-                "/usr/include/atk-1.0"
+                "/usr/include/atk-1.0",
+                "/usr/include/aarch64-linux-gnu",
+                "/usr/include/linux",
+                "/usr/include/c++/7/tr1"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

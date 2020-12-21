@@ -142,5 +142,8 @@ pkg-config --cflags --libs gstreamer-rtsp-server-1.0 =
 Visual Code:
 Reference: https://pimylifeup.com/raspberry-pi-visual-studio-code/
 
+jtop
+sudo -H pip install -U jetson-stats
+
 
 
